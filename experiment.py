@@ -32,8 +32,8 @@ from rdiga import RDIGA
 # -----------------------------------------------------------------------
 POP_SIZE        = 55
 CROSSOVER_RATE  = 0.50
-N_GENERATIONS   = 50
-N_RUNS          = 5
+N_GENERATIONS   = 150
+N_RUNS          = 10
 RESULTS_DIR     = "results"
 
 CONFIGS = [

@@ -125,7 +125,7 @@ def plot_comparison_table(results):
             table[i + 1, j].set_facecolor(rgba)
 
     ax.set_title(
-        "Experiment Comparison Summary  (avg over 5 runs per config)",
+        "Experiment Comparison Summary  (avg over 10 runs per config)",
         fontsize=13, fontweight="bold", pad=18
     )
     fig.tight_layout()
