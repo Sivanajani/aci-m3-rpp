@@ -21,6 +21,7 @@ Outputs:
 
 import json
 import os
+import random
 import numpy as np
 
 from grid import Grid
@@ -32,8 +33,8 @@ from rdiga import RDIGA
 # -----------------------------------------------------------------------
 POP_SIZE        = 55
 CROSSOVER_RATE  = 0.50
-N_GENERATIONS   = 150
-N_RUNS          = 10
+N_GENERATIONS   = 200
+N_RUNS          = 15
 RESULTS_DIR     = "results"
 
 CONFIGS = [
@@ -124,6 +125,9 @@ def run_config(config, grid):
 
 # -----------------------------------------------------------------------
 def main():
+    np.random.seed(7)
+    random.seed(7)
+
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     print("=" * 65)
