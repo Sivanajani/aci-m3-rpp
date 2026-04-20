@@ -9,7 +9,7 @@ Start = (0, 0), Goal = (49, 49).
 import numpy as np
 
 GRID_SIZE       = 50
-OBSTACLE_DENSITY = 0.25          # 25 %  →  625 obstacle tiles
+OBSTACLE_DENSITY = 0.25          # 25 %: 625 obstacle tiles
 START           = (0, 0)
 GOAL            = (49, 49)
 
