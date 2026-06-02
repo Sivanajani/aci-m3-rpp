@@ -1,0 +1,83 @@
+<svg width="100%" viewBox="0 0 680 920" role="img" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- Step 1: Initialization -->
+<rect x="215" y="30" width="250" height="44" rx="8" style="fill:rgb(68,68,65);stroke:rgb(180,178,169);stroke-width:0.5px"/>
+<text x="340" y="52" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Initialization</text>
+<line x1="340" y1="74" x2="340" y2="134" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="85" width="380" height="18" fill="white"/>
+<text x="340" y="94" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">Generate random population of paths</text>
+
+<!-- Step 2: Fitness evaluation -->
+<rect x="215" y="134" width="250" height="44" rx="8" style="fill:rgb(68,68,65);stroke:rgb(180,178,169);stroke-width:0.5px"/>
+<text x="340" y="156" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Fitness evaluation</text>
+<line x1="340" y1="178" x2="340" y2="238" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="189" width="380" height="18" fill="white"/>
+<text x="340" y="198" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">Compute F = O&#xD7;55 + P&#xD7;20 + A&#xD7;5 + D&#xD7;2</text>
+
+<!-- Step 3: Selection -->
+<rect x="215" y="238" width="250" height="44" rx="8" style="fill:rgb(8,80,65);stroke:rgb(93,202,165);stroke-width:0.5px"/>
+<text x="340" y="260" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Selection</text>
+<line x1="340" y1="282" x2="340" y2="342" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="293" width="380" height="18" fill="white"/>
+<text x="340" y="302" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">Choose parent chromosomes by fitness</text>
+
+<!-- Step 4: Crossover -->
+<rect x="215" y="342" width="250" height="44" rx="8" style="fill:rgb(8,80,65);stroke:rgb(93,202,165);stroke-width:0.5px"/>
+<text x="340" y="364" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Crossover</text>
+<line x1="340" y1="386" x2="340" y2="446" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="397" width="380" height="18" fill="white"/>
+<text x="340" y="406" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">Recombine parent path segments</text>
+
+<!-- Step 5: Mutation -->
+<rect x="215" y="446" width="250" height="44" rx="8" style="fill:rgb(8,80,65);stroke:rgb(93,202,165);stroke-width:0.5px"/>
+<text x="340" y="468" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Mutation</text>
+<line x1="340" y1="490" x2="340" y2="550" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="501" width="380" height="18" fill="white"/>
+<text x="340" y="510" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">Alter genes with defined probability</text>
+
+<!-- CGA bypass arrow (skips RDI) -->
+<path d="M215 468 L140 468 L140 666 L215 666" fill="none" stroke="rgb(140,140,140)" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+<text x="120" y="558" text-anchor="middle" dominant-baseline="central" style="fill:rgb(90,90,90);font-size:12px;font-family:sans-serif">CGA</text>
+<text x="120" y="574" text-anchor="middle" dominant-baseline="central" style="fill:rgb(90,90,90);font-size:12px;font-family:sans-serif">skips</text>
+
+<!-- Step 6: RDI operator -->
+<rect x="195" y="550" width="290" height="56" rx="8" style="fill:rgb(99,56,6);stroke:rgb(239,159,39);stroke-width:1px"/>
+<text x="340" y="572" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">RDI operator</text>
+<text x="340" y="590" text-anchor="middle" dominant-baseline="central" style="fill:rgb(239,159,39);font-size:12px;font-family:sans-serif">Shuffle + invert gene subset (RDIGA only)</text>
+<line x1="487" y1="578" x2="538" y2="578" stroke="rgb(180,178,169)" stroke-width="0.8" stroke-dasharray="4 3"/>
+<text x="544" y="572" dominant-baseline="central" style="fill:rgb(90,90,90);font-size:12px;font-family:sans-serif">RDIGA</text>
+<text x="544" y="587" dominant-baseline="central" style="fill:rgb(90,90,90);font-size:12px;font-family:sans-serif">only</text>
+
+<!-- Arrow 6→7 -->
+<line x1="340" y1="606" x2="340" y2="666" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+
+<!-- Step 7: Replace population -->
+<rect x="215" y="666" width="250" height="44" rx="8" style="fill:rgb(68,68,65);stroke:rgb(180,178,169);stroke-width:0.5px"/>
+<text x="340" y="688" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Replace population</text>
+<line x1="340" y1="710" x2="340" y2="770" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<rect x="150" y="721" width="380" height="18" fill="white"/>
+<text x="340" y="730" text-anchor="middle" dominant-baseline="central" style="fill:rgb(60,60,60);font-size:12px;font-family:sans-serif">New individuals replace old ones</text>
+
+<!-- Step 8: Termination check (diamond) -->
+<polygon points="340,770 475,814 340,858 205,814" fill="white" stroke="rgb(160,158,150)" stroke-width="2.5"/>
+<text x="340" y="808" text-anchor="middle" dominant-baseline="central" style="fill:rgb(30,30,30);font-size:14px;font-weight:500;font-family:sans-serif">Converged?</text>
+<text x="340" y="826" text-anchor="middle" dominant-baseline="central" style="fill:rgb(80,80,80);font-size:12px;font-family:sans-serif">Max generations reached?</text>
+
+<!-- YES arrow -->
+<line x1="475" y1="814" x2="555" y2="814" marker-end="url(#arrow)" style="stroke:rgb(120,120,120);stroke-width:1.5px"/>
+<text x="515" y="805" text-anchor="middle" dominant-baseline="central" style="fill:rgb(80,80,80);font-size:12px;font-family:sans-serif">Yes</text>
+
+<!-- Return best -->
+<rect x="558" y="792" width="104" height="44" rx="8" style="fill:rgb(68,68,65);stroke:rgb(180,178,169);stroke-width:0.5px"/>
+<text x="610" y="814" text-anchor="middle" dominant-baseline="central" style="fill:white;font-size:14px;font-weight:500;font-family:sans-serif">Return best</text>
+
+<!-- NO loop back -->
+<path d="M340 858 L340 882 L608 882 L608 156 L465 156" fill="none" stroke="rgb(140,140,140)" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+<text x="328" y="871" text-anchor="end" dominant-baseline="central" style="fill:rgb(80,80,80);font-size:12px;font-family:sans-serif">No &#x2014; next generation</text>
+
+</svg>
