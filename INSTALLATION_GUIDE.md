@@ -16,9 +16,9 @@
 
 ## Installation
 
-**Step 1 — Install Python packages**
+**Step 1 — Install Python packages** (from the project root folder)
 ```bash
-pip install fastapi uvicorn[standard] numpy scipy matplotlib
+pip install -r requirements.txt
 ```
 
 **Step 2 — Install frontend packages** (from the project root folder)
