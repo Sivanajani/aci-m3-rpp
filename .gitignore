@@ -8,7 +8,7 @@ __pycache__/
 .env.*
 
 # Experiment outputs
-results/
+ACI_data_SivakumarSivanajani/
 
 # Frontend
 frontend/node_modules/
