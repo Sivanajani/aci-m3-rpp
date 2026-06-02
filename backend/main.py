@@ -12,6 +12,7 @@ import os
 import random
 import threading
 import numpy as np
+from scipy import stats as scipy_stats
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -197,3 +198,70 @@ def results():
         "grid"   : state["grid"],
         "params" : state["params"],
     }
+
+
+@app.get("/statistics")
+def statistics():
+    if state["status"] != "done":
+        raise HTTPException(status_code=404, detail="Results not ready yet.")
+
+    configs = {r["config_name"]: np.array(r["all_final_fitness"]) for r in state["results"]}
+
+    def boxplot_stats(arr):
+        q1, med, q3 = np.percentile(arr, [25, 50, 75])
+        iqr = q3 - q1
+        lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+        inliers  = arr[(arr >= lower) & (arr <= upper)]
+        outliers = arr[(arr < lower)  | (arr > upper)]
+        return {
+            "q1"      : float(q1),
+            "median"  : float(med),
+            "q3"      : float(q3),
+            "min"     : float(inliers.min()) if len(inliers) else float(arr.min()),
+            "max"     : float(inliers.max()) if len(inliers) else float(arr.max()),
+            "mean"    : float(arr.mean()),
+            "outliers": outliers.tolist(),
+        }
+
+    boxplots = {name: boxplot_stats(arr) for name, arr in configs.items()}
+
+    def effect_label(d):
+        d = abs(d)
+        if d < 0.2: return "negligible"
+        if d < 0.5: return "small"
+        if d < 0.8: return "medium"
+        return "large"
+
+    COMPARISONS = [
+        ("CGA_mut50",   "RDIGA_mut50", "Algorithm Effect (μ=50%)"),
+        ("CGA_mut80",   "RDIGA_mut80", "Algorithm Effect (μ=80%)"),
+        ("CGA_mut50",   "CGA_mut80",   "Mutation Rate Effect (CGA)"),
+        ("RDIGA_mut50", "RDIGA_mut80", "Mutation Rate Effect (RDIGA)"),
+    ]
+
+    tests = []
+    for name_a, name_b, label in COMPARISONS:
+        a, b = configs[name_a], configs[name_b]
+        mw_stat, mw_p = scipy_stats.mannwhitneyu(a, b, alternative="two-sided")
+        n       = len(a) + len(b)
+        mu_U    = len(a) * len(b) / 2
+        sigma_U = np.sqrt(len(a) * len(b) * (n + 1) / 12)
+        z       = float((mw_stat - mu_U) / sigma_U)
+        t_stat, t_p = scipy_stats.ttest_ind(a, b, equal_var=False)
+        pooled_std  = np.sqrt((np.std(a, ddof=1)**2 + np.std(b, ddof=1)**2) / 2)
+        d = float((np.mean(a) - np.mean(b)) / pooled_std)
+        tests.append({
+            "label"      : label,
+            "name_a"     : name_a,
+            "name_b"     : name_b,
+            "mw_u"       : float(mw_stat),
+            "mw_z"       : z,
+            "mw_p"       : float(mw_p),
+            "t_stat"     : float(t_stat),
+            "t_p"        : float(t_p),
+            "cohens_d"   : d,
+            "effect"     : effect_label(d),
+            "significant": bool(mw_p < 0.05),
+        })
+
+    return {"boxplots": boxplots, "tests": tests}

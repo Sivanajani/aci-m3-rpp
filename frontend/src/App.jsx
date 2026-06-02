@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import ConfigPanel     from './components/ConfigPanel.jsx'
-import ProgressLog     from './components/ProgressLog.jsx'
-import FitnessCurves   from './components/FitnessCurves.jsx'
-import ComparisonTable from './components/ComparisonTable.jsx'
-import PathGrid        from './components/PathGrid.jsx'
-import DownloadPanel   from './components/DownloadPanel.jsx'
-import ProgressBar     from './components/ProgressBar.jsx'
+import ConfigPanel      from './components/ConfigPanel.jsx'
+import ProgressLog      from './components/ProgressLog.jsx'
+import FitnessCurves    from './components/FitnessCurves.jsx'
+import ComparisonTable  from './components/ComparisonTable.jsx'
+import StatisticsPanel  from './components/StatisticsPanel.jsx'
+import PathGrid         from './components/PathGrid.jsx'
+import DownloadPanel    from './components/DownloadPanel.jsx'
+import ProgressBar      from './components/ProgressBar.jsx'
 
 const API = import.meta.env.VITE_API_URL
 
@@ -37,8 +38,13 @@ export default function App() {
 
       if (s.status === 'done') {
         clearInterval(pollRef.current)
-        const r = await fetch(`${API}/results`)
-        setData(await r.json())
+        const [rRes, sRes] = await Promise.all([
+          fetch(`${API}/results`),
+          fetch(`${API}/statistics`),
+        ])
+        const rData = await rRes.json()
+        const sData = await sRes.json()
+        setData({ ...rData, stats: sData })
       }
       if (s.status === 'error') {
         clearInterval(pollRef.current)
@@ -55,7 +61,7 @@ export default function App() {
       <header className="app-header">
         <div>
           <h1>CGA vs RDIGA — Robotic Path Planning</h1>
-          <p>Applied Computational Intelligence · Milestone 3</p>
+          <p>Applied Computational Intelligence · Milestone 4</p>
         </div>
         <div className="header-meta">
           <span className="header-name">Sivanajani Sivakumar</span>
@@ -103,6 +109,7 @@ export default function App() {
             <div className="results-animate">
               <FitnessCurves   results={data.results} />
               <ComparisonTable results={data.results} />
+              <StatisticsPanel stats={data.stats} />
               <PathGrid
                 results={data.results}
                 paths={data.paths}
