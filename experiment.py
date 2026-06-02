@@ -112,7 +112,7 @@ def run_config(config, grid):
         "avg_fitness_curve"     : avg_curve,
         # summary statistics
         "avg_final_fitness"     : float(np.mean(all_fitness)),
-        "std_final_fitness"     : float(np.std(all_fitness)),
+        "std_final_fitness"     : float(np.std(all_fitness, ddof=1)),
         "avg_path_length"       : float(np.mean(all_lengths)),
         "avg_obstacle_collisions": float(np.mean(all_collisions)),
         "avg_runtime_seconds"   : float(np.mean(all_runtimes)),
