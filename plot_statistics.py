@@ -134,7 +134,7 @@ def main():
     fig, axes = plt.subplots(2, 2, figsize=(10, 11))
 
     fig.suptitle(
-        "CGA vs. RDIGA — Final Fitness Distribution (500 Generations, 15 Runs, Seed 7)\n"
+        "CGA vs. RDIGA — Final Fitness Distribution (200 Generations, 15 Runs, Seed 7)\n"
         "Box = IQR  |  White line = median  |  Points = individual runs",
         fontsize=11, fontweight="bold", y=0.995
     )

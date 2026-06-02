@@ -1,4 +1,4 @@
-# ACI Milestone 3 — CGA vs RDIGA for Robotic Path Planning
+# ACI — CGA vs RDIGA for Robotic Path Planning
 
 **Author:** Sivanajani Sivakumar  
 **Email:** sivanajani.sivakumar@students.fhnw.ch  
@@ -77,8 +77,8 @@ aci_m3/
 │   ├── 7seed_200gens_15runs_results.json   # Main experiment results (200 gens)
 │   ├── 7seed_500gens_15runs_results.json   # Extended run results (500 gens)
 │   ├── 7seed_200gens_15runs_*.png          # Plots for 200-gen run
-│   ├── statistical_boxplots.png            # Statistical comparison boxplots
-│   └── statistical_stripplot.png          # Stripplot with individual run values
+│   ├── 200_statistical_boxplots.png        # Statistical boxplots (200 gens)
+│   └── 200_statistical_stripplot.png       # Stripplot with individual run values
 │
 ├── INSTALL.md               # One-page installation and run guide
 ├── EXPERIMENT_LOG.md        # Full experiment documentation with results
@@ -154,31 +154,7 @@ All tests run on `results/7seed_200gens_15runs_results.json` (n=15 per config, �
 
 ## How to Run
 
-See **[INSTALL.md](INSTALL.md)** for the full installation and run guide.
-
-### Quick Start — Command Line
-
-```bash
-pip install numpy matplotlib scipy fastapi "uvicorn[standard]"
-
-python experiment.py                                                      # 200 gens, 15 runs, seed 7
-python statistical_tests.py --file results/7seed_200gens_15runs_results.json
-python plot_statistics.py
-python plot_stripplot.py
-```
-
-### Quick Start — Web App
-
-```bash
-# Terminal 1 — Backend (run from project root)
-uvicorn backend.main:app --reload
-
-# Terminal 2 — Frontend
-cd frontend
-npm install
-npm run dev
-# → open http://localhost:5173
-```
+See **[INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)** for the full installation and run guide.
 
 ---
 
