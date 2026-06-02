@@ -22,7 +22,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from grid import Grid
 from cga import CGA
 from rdiga import RDIGA
-from fitness import count_collisions, compute_distance
 
 # -----------------------------------------------------------------------
 app = FastAPI(title="ACI M3 — RPP Experiment API")
@@ -40,7 +39,7 @@ app.add_middleware(
 state = {
     "status" : "idle",    # idle | running | done | error
     "log"    : [],        # list of progress strings
-    "results": None,      # list of config result dicts
+    "results": [],        # list of config result dicts
     "grid"   : None,      # 50×50 list-of-lists (0/1)
     "paths"  : None,      # {config_name: [[r,c], ...]}
     "params" : None,      # last used params
@@ -60,6 +59,8 @@ CROSSOVER_RATE = 0.50
 
 # -----------------------------------------------------------------------
 class RunParams(BaseModel):
+    """Parameters for a single experiment run."""
+
     n_generations: int = 150
     n_runs:        int = 10
     seed:          int = 42
@@ -151,7 +152,7 @@ def _run_experiment(params: RunParams):
         state["status"]  = "done"
         state["log"].append("Experiment complete!")
 
-    except Exception as exc:
+    except Exception as exc:  # pylint: disable=broad-exception-caught
         state["status"] = "error"
         state["error"]  = str(exc)
         state["log"].append(f"ERROR: {exc}")
@@ -160,6 +161,7 @@ def _run_experiment(params: RunParams):
 # -----------------------------------------------------------------------
 @app.post("/run")
 def run(params: RunParams):
+    """Start the experiment with the given parameters."""
     if state["status"] == "running":
         raise HTTPException(status_code=409, detail="Experiment already running.")
 
@@ -167,7 +169,7 @@ def run(params: RunParams):
     state.update({
         "status" : "running",
         "log"    : [],
-        "results": None,
+        "results": [],
         "grid"   : None,
         "paths"  : None,
         "error"  : None,
@@ -181,6 +183,7 @@ def run(params: RunParams):
 
 @app.get("/status")
 def status():
+    """Return current experiment status and log."""
     return {
         "status": state["status"],
         "log"   : state["log"],
@@ -190,6 +193,7 @@ def status():
 
 @app.get("/results")
 def results():
+    """Return full results once the experiment is complete."""
     if state["status"] != "done":
         raise HTTPException(status_code=404, detail="Results not ready yet.")
     return {
@@ -202,6 +206,7 @@ def results():
 
 @app.get("/statistics")
 def statistics():
+    """Return boxplot stats and pairwise statistical tests for all configs."""
     if state["status"] != "done":
         raise HTTPException(status_code=404, detail="Results not ready yet.")
 
@@ -227,12 +232,15 @@ def statistics():
 
     def effect_label(d):
         d = abs(d)
-        if d < 0.2: return "negligible"
-        if d < 0.5: return "small"
-        if d < 0.8: return "medium"
+        if d < 0.2:
+            return "negligible"
+        if d < 0.5:
+            return "small"
+        if d < 0.8:
+            return "medium"
         return "large"
 
-    COMPARISONS = [
+    comparisons = [
         ("CGA_mut50",   "RDIGA_mut50", "Algorithm Effect (μ=50%)"),
         ("CGA_mut80",   "RDIGA_mut80", "Algorithm Effect (μ=80%)"),
         ("CGA_mut50",   "CGA_mut80",   "Mutation Rate Effect (CGA)"),
@@ -240,13 +248,13 @@ def statistics():
     ]
 
     tests = []
-    for name_a, name_b, label in COMPARISONS:
+    for name_a, name_b, label in comparisons:
         a, b = configs[name_a], configs[name_b]
         mw_stat, mw_p = scipy_stats.mannwhitneyu(a, b, alternative="two-sided")
         n       = len(a) + len(b)
-        mu_U    = len(a) * len(b) / 2
-        sigma_U = np.sqrt(len(a) * len(b) * (n + 1) / 12)
-        z       = float((mw_stat - mu_U) / sigma_U)
+        mu_u    = len(a) * len(b) / 2
+        sigma_u = np.sqrt(len(a) * len(b) * (n + 1) / 12)
+        z       = float((mw_stat - mu_u) / sigma_u)
         t_stat, t_p = scipy_stats.ttest_ind(a, b, equal_var=False)
         pooled_std  = np.sqrt((np.std(a, ddof=1)**2 + np.std(b, ddof=1)**2) / 2)
         d = float((np.mean(a) - np.mean(b)) / pooled_std)

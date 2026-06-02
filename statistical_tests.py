@@ -32,7 +32,7 @@ ALPHA = 0.05  # significance level
 
 def load_configs(path: str) -> dict:
     """Reads JSON and returns dict {config_name: [fitness_values]}."""
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         data = json.load(f)
     return {entry["config_name"]: entry["all_final_fitness"] for entry in data}
 
@@ -51,26 +51,33 @@ def load_configs(path: str) -> dict:
 #   |d| >= 0.8 → large
 
 def cohen_d(a, b):
+    """Compute Cohen's d effect size between two arrays."""
     pooled_std = np.sqrt((np.std(a, ddof=1) ** 2 + np.std(b, ddof=1) ** 2) / 2)
     return (np.mean(a) - np.mean(b)) / pooled_std
 
 
 def effect_label(d):
+    """Return a human-readable label for a Cohen's d value."""
     d = abs(d)
-    if d < 0.2: return "negligible"
-    if d < 0.5: return "small"
-    if d < 0.8: return "medium"
+    if d < 0.2:
+        return "negligible"
+    if d < 0.5:
+        return "small"
+    if d < 0.8:
+        return "medium"
     return "large"
 
 
 # ─── All three tests combined ─────────────────────────────────────────────────
 
 def run_tests(a, b, name_a, name_b):
+    """Print Mann-Whitney U, Welch t-test, and Cohen's d for two fitness arrays."""
     print(f"{'─'*58}")
     print(f"  {name_a}  vs  {name_b}")
     print(f"{'─'*58}")
-    print(f"  {name_a:<15}  n={len(a):>2}  Median={np.median(a):>8.2f}  M={np.mean(a):>8.2f}  SD={np.std(a, ddof=1):>7.2f}")
-    print(f"  {name_b:<15}  n={len(b):>2}  Median={np.median(b):>8.2f}  M={np.mean(b):>8.2f}  SD={np.std(b, ddof=1):>7.2f}")
+    fmt = "  {:<15}  n={:>2}  Median={:>8.2f}  M={:>8.2f}  SD={:>7.2f}"
+    print(fmt.format(name_a, len(a), np.median(a), np.mean(a), np.std(a, ddof=1)))
+    print(fmt.format(name_b, len(b), np.median(b), np.mean(b), np.std(b, ddof=1)))
     print()
 
     # ── Test 1: Mann-Whitney U ─────────────────────────────────────────────────
@@ -84,9 +91,9 @@ def run_tests(a, b, name_a, name_b):
 
     mw_stat, mw_p = stats.mannwhitneyu(a, b, alternative="two-sided")
     n = len(a) + len(b)
-    mu_U    = len(a) * len(b) / 2
-    sigma_U = np.sqrt(len(a) * len(b) * (n + 1) / 12)
-    z       = (mw_stat - mu_U) / sigma_U
+    mu_u    = len(a) * len(b) / 2
+    sigma_u = np.sqrt(len(a) * len(b) * (n + 1) / 12)
+    z       = (mw_stat - mu_u) / sigma_u
 
     sig_mw = "*" if mw_p < ALPHA else "n.s."
     print(f"  [1] Mann-Whitney U  U={mw_stat:>5.0f}  Z={z:>6.3f}  p={mw_p:.4f}  {sig_mw}")
